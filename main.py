@@ -20,6 +20,7 @@ class COLORS(Enum):
 
 # options
 CACHE_DIR = ".cache/"
+CACHE_POKEMON_DIR = "pokemon/"
 
 # constants
 POKEMON_ENDPOINT = "https://pokeapi.co/api/v2/pokemon/"
@@ -62,7 +63,7 @@ def get_pokemon(name):
     
     # first, check the cache for a previous API pull
     filename = name + ".json"
-    filepath = Path(CACHE_DIR + filename)
+    filepath = Path(CACHE_DIR + CACHE_POKEMON_DIR + filename)
     if filepath.exists():
         print(color_text("opening cached file: "+str(filepath), COLORS.GREEN))
         stat = filepath.stat()
@@ -93,7 +94,7 @@ def get_pokemon(name):
 def add_n_pokemon(pokemon, n:int=0):
     
     # set autocomplete to pokemon names in cache
-    cached_names = [file.name.removesuffix(".json") for file in Path(CACHE_DIR).iterdir() if file.is_file()]
+    cached_names = [file.name.removesuffix(".json") for file in Path(CACHE_DIR+CACHE_POKEMON_DIR).iterdir() if file.is_file()]
     readline.set_completer(make_completer(cached_names))
 
     # loop until n pokemon
@@ -229,7 +230,6 @@ def main():
             with open(cmd, "r") as f:
                 for line in f:
                     pokemon.append(get_pokemon(line.strip()))
-        #================================================================
         # autocomplete to the first available command
         else:
             cmd = main_completer(cmd, 0)
